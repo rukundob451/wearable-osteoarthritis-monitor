@@ -1,0 +1,29 @@
+void stepDetection() {
+  if(mpu.getMotionInterruptStatus()) {
+    sensors_event_t a, g, temp;
+    mpu.getEvent(&a, &g, &temp);
+
+    // Create separate variables for accelerometer values
+    float accelX = a.acceleration.x / 16384.0;
+    float accelY = a.acceleration.y / 16384.0;
+    float accelZ = a.acceleration.z / 16384.0;
+
+    // Basic step detection algorithm using acceleration magnitude
+    float accelMagnitude = sqrt(accelX * accelX +
+                                accelY * accelY +
+                                accelZ * accelZ);
+    Serial.println(accelMagnitude);
+
+    unsigned long currentTime = millis();
+    if (accelMagnitude > stepThreshold && (currentTime - lastStepTime) > stepTimeout) {
+        stepCount++;
+        lastStepTime = currentTime;
+        /* 
+ if (accMagnitudePrev > accMagnitude + 0.1 && accMagnitudePrev > 1.5) {
+    stepCount++;
+    saveStepCount();
+      // Create a string containing the step count data
+    String stepData = String(stepCount);*/
+    }
+  }
+}
